@@ -57,3 +57,13 @@ def calc_momentum(data):
 
 momentum = calc_momentum(df)
 print(momentum)
+
+def rank_stocks(data, n):
+    '''
+    Creates a dataframe of the top n stocks per month.
+
+    Returns:
+    DataFrame[int]: A Pandas dataframe containing the top n stock momentums per  month.
+    ''' 
+    df = pd.DataFrame(data)
+    

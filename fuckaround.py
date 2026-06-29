@@ -29,3 +29,4 @@ def docoolstuff(input):
   print(a)
 
 print(calendar.month_abbr[date.today().month])
+
