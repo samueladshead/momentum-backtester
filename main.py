@@ -12,6 +12,7 @@
 # -----------------------------------------------------------------------------
 
 import pandas as pd
+import numpy as np
 import yfinance as yf
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -60,29 +61,38 @@ momentum = calc_momentum(df)
 
 def rank_stocks(data, n):
     '''
-    Identifies the top N stocks by momentum for each date in the dataset.
+    Ranks the top n stock momentums over the given period as defined by the other functions.
 
-    For every row (date) in the input DataFrame, ranks all tickers by their
-    momentum value and selects the top N performers.
-
-    Args:
-    data (DataFrame): Momentum values indexed by date, with one column
-    per ticker (output of calc_momentum).
-    n (int): Number of top-ranked tickers to select per date.
+    Arguments:
+    data(pd.DataFrame): Values of all tickers' momentums sampled monthly.
+    n(int): Number of momentums to be shown at the top.
 
     Returns:
-    dict[pd.Timestamp, pd.Series]: A dictionary mapping each date to a
-    Series of the top N tickers and their momentum values, sorted
-    in descending order.
+    pd.DataFrame[pd.Timestamp, (pd.Ticker, pd.Series)]: A Pandas Dataframe mapping
+    the top n tickers onto the last day of the month.
     '''
     rankings = {}
-    tickers = []
+    biden = {}
     df = pd.DataFrame(data)
     for index, row in df.iterrows():
         rankings[index] = row.nlargest(n)
-    print(tickers)
+
+    for x,y in rankings.items(): #Per day basis
+        y = pd.Series(y)
+        huge = []
+        for index, value in y.items(): #Dive into each day and disect a day
+            joe = (index, round(value,3))
+            huge.append(joe)
+        biden[x] = huge
     
-    return rankings
+    kamala = []
+    harris = np.arange(1,n+1,1)
+    for x in harris:
+        f = f'Rank {x}'
+        kamala.append(f)
+
+    biden = pd.DataFrame(biden, index = kamala).T
+    return biden
 
 rankedtickers = rank_stocks(momentum, 3)
 print(rankedtickers)
