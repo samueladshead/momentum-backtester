@@ -1,19 +1,18 @@
 import pandas as pd
 from datetime import date
 from dateutil.relativedelta import relativedelta
-import calendar
 
 data = {
   "calories": [420, 380, 390, 425],
   "duration": [50, 40, 45, 67]
 }
-
+print(data)
 #load data into a DataFrame object:
 df = pd.DataFrame(data, index = ["2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30"])
 
 print(df)
-idk = df.loc[f"2026-06-27"] + df.loc[f"2026-06-28"]
-print(idk)
+#idk = df.loc[f"2026-06-27"] + df.loc[f"2026-06-28"]
+#print(idk)
 
 b = df.loc[f"{date.today()}", "duration"]
 
@@ -28,5 +27,10 @@ def docoolstuff(input):
     
   print(a)
 
-print(calendar.month_abbr[date.today().month])
+#print(calendar.month_abbr[date.today().month])
 
+def idk(input):
+  df = pd.DataFrame(input)
+  um = df.loc["2026-06-30"].sort_values(ascending=True)
+  matcha = um.nlargest(3).index
+  print(matcha)

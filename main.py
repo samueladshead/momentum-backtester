@@ -28,8 +28,8 @@ def create_dataframe(data, backtest_length):
     the 12-1 month momentum calculation method.
 
     Args:
-    data (list): A list of all tickers that the user wants to get information on.
-    backtest_length (int): Length of the test (months).
+    data(list): A list of all tickers that the user wants to get information on.
+    backtest_length(int): Length of the test (months).
 
     Returns:
     DataFrame[int]: A Pandas dataframe containing financial data for the chosen companies
@@ -56,14 +56,33 @@ def calc_momentum(data):
     return df
 
 momentum = calc_momentum(df)
-print(momentum)
+#print(momentum)
 
 def rank_stocks(data, n):
     '''
-    Creates a dataframe of the top n stocks per month.
+    Identifies the top N stocks by momentum for each date in the dataset.
+
+    For every row (date) in the input DataFrame, ranks all tickers by their
+    momentum value and selects the top N performers.
+
+    Args:
+    data (DataFrame): Momentum values indexed by date, with one column
+    per ticker (output of calc_momentum).
+    n (int): Number of top-ranked tickers to select per date.
 
     Returns:
-    DataFrame[int]: A Pandas dataframe containing the top n stock momentums per  month.
-    ''' 
+    dict[pd.Timestamp, pd.Series]: A dictionary mapping each date to a
+    Series of the top N tickers and their momentum values, sorted
+    in descending order.
+    '''
+    rankings = {}
+    tickers = []
     df = pd.DataFrame(data)
+    for index, row in df.iterrows():
+        rankings[index] = row.nlargest(n)
+    print(tickers)
     
+    return rankings
+
+rankedtickers = rank_stocks(momentum, 3)
+print(rankedtickers)
