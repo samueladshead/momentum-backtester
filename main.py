@@ -85,10 +85,41 @@ def rank_stocks(data, n):
     biden = pd.DataFrame(biden, index = kamala).T
     return biden
 
+def simulate_portfolio(prices,momentum,rankings,money):
+    prices = pd.DataFrame(prices)
+    rankings = pd.DataFrame(rankings)
+    rankings2 = {}
+    portfolio_value = money
+    dates = list(rankings.index)
+    
+    for index, row in rankings.iterrows(): #Extract the top 3 tickers from each month from rankings
+        balls = []
+        rfk = []
+        noofshares = []
+        rfk2 = []
+        nextindex = index + pd.offsets.MonthEnd(1)
+        for index1,value in row.items():
+                ticker = value[0]
+                balls.append(ticker)#Find their prices on the last trading day of the month 
+                rfk.append(round(prices[ticker].asof(index),3))#Or as close as possible with the .asof function 
+                rfk2.append(round(prices[ticker].asof(nextindex),3))#rfk2 defintion here(next value)
+                cost = portfolio_value / len(row)
+                shares = round(cost / rfk[-1],3)
+                noofshares.append(shares)
+        rankings2[index] = [balls, rfk, noofshares, portfolio_value]
+        portfolio_value = round(sum(noofshares[i] * rfk2[i] for i in range(len(noofshares))), 3)
+    rankings2 = pd.DataFrame(rankings2, index = ["Tickers", "Prices (Close)", "No. of shares"
+                                                 ,"Portfolio Value"]).T
+    return(rankings2)
+
+# =============================================================================
+# TESTING THE FUNCTIONS AND THE SOLUTIONS
+# =============================================================================
+
 companies = ['NVDA', 'GOOGL', 'AAPL', 'MSFT', 'AMZN', 'TSM', 'AVGO', 'META', 'TSLA', 'JPM']
 
 df = create_dataframe(companies, 12) #Create a dataframe for the last 12 months
-print(df)
+#print(df)
 #df.plot()
 #plt.show()
 
@@ -96,12 +127,7 @@ momentum = calc_momentum(df)
 #print(momentum)
 
 rankedtickers = rank_stocks(momentum, 3)
-print(rankedtickers)
+#print(rankedtickers)
 
-def simulate_portfolio(prices,momentum,rankings,money):
-    prices = pd.DataFrame(prices)
-    momentum = pd.DataFrame(momentum)
-    rankings = pd.DataFrame(rankings)
-    #Extract the top 3 tickers from each month from rankings
-    #Find their prices on the last trading day of the month
-    #Buy them at that price on 
+simulation = simulate_portfolio(df,momentum,rankedtickers,10000)
+#print(simulation)

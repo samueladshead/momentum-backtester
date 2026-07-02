@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import date
 from dateutil.relativedelta import relativedelta
+import numpy as np
 
 data = {
   "calories": [420, 380, 390, 425],
@@ -9,12 +10,13 @@ data = {
 print(data)
 #load data into a DataFrame object:
 df = pd.DataFrame(data, index = ["2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30"])
-
+df["balls"] = df["calories"].shift(-1)
+df["cock"] = df["balls"] - df["calories"]
 print(df)
 #idk = df.loc[f"2026-06-27"] + df.loc[f"2026-06-28"]
 #print(idk)
 
-b = df.loc[f"{date.today()}", "duration"]
+#b = df.loc[f"{date.today()}", "duration"]
 
 def docoolstuff(input):
   input = pd.DataFrame(input)
