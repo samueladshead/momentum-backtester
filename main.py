@@ -90,7 +90,6 @@ def simulate_portfolio(prices,momentum,rankings,money):
     rankings = pd.DataFrame(rankings)
     rankings2 = {}
     portfolio_value = money
-    dates = list(rankings.index)
     
     for index, row in rankings.iterrows(): #Extract the top 3 tickers from each month from rankings
         balls = []
@@ -110,7 +109,65 @@ def simulate_portfolio(prices,momentum,rankings,money):
         portfolio_value = round(sum(noofshares[i] * rfk2[i] for i in range(len(noofshares))), 3)
     rankings2 = pd.DataFrame(rankings2, index = ["Tickers", "Prices (Close)", "No. of shares"
                                                  ,"Portfolio Value"]).T
-    return(rankings2)
+    return rankings2
+
+def parameter_calculation(simulationresult):
+    simres = pd.DataFrame(simulationresult)
+    dates = list(simres.index)
+    nmonthreturn = np.subtract(simres.loc[dates[-1], "Portfolio Value"] / simres.loc[dates[0], "Portfolio Value"], 1)
+    annualreturn = (1 + nmonthreturn) ** (12 / len(dates)) - 1
+
+    equitycurve = simres.get("Portfolio Value")
+    monthlyreturns = equitycurve.pct_change().dropna()
+
+    sharpe = (monthlyreturns.mean() / monthlyreturns.std()) * np.sqrt(12)
+
+    maximumvalue = equitycurve.cummax()
+    temp = (equitycurve - maximumvalue) / maximumvalue
+    maxdrawdown = f"{round(temp.min(),3) * 100} %"
+
+    print("Please type the number(s) of the parameter(s) you wish to calculate")
+    print("Key:")
+    print("1 - Annual Return")
+    print("2 - Monthly returns")
+    print("3 - Sharpe ratio")
+    print("4 - Maximum Drawdown (MDD)")
+
+    options = {
+    "1": ("Annual Return", annualreturn),
+    "2": ("Monthly Returns", monthlyreturns),
+    "3": ("Sharpe Ratio", sharpe),
+    "4": ("Maximum Drawdown (MDD)", maxdrawdown)
+    }
+
+    userinput = input("Enter option(s) e.g. 13 for options 1 and 3: ")
+
+    for char in userinput:
+        if char in options:
+            label, value = options[char]
+            print(f"{label}: {value}")
+        else:
+            print(f"'{char}' is not a valid option")
+
+def plotequitycurve(simulation):
+    simres = pd.DataFrame(simulation)
+    equitycurve = simres.get("Portfolio Value")
+
+    dates = list(simres.index)
+    spy = pd.DataFrame(yf.download("SPY", start=dates[0], end=dates[-1])["Close"])
+    spy_normalised = spy / spy.iloc[0] * 10000
+
+
+
+    plt.plot(equitycurve, label='Momentum Strategy')
+    plt.plot(spy_normalised, label='SPY Benchmark')
+    plt.title('Momentum strategy vs SPY Benchmark')
+    plt.xlabel('Days (yyyy-mm-dd)')
+    plt.ylabel('Portfolio Value')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
 
 # =============================================================================
 # TESTING THE FUNCTIONS AND THE SOLUTIONS
@@ -131,3 +188,7 @@ rankedtickers = rank_stocks(momentum, 3)
 
 simulation = simulate_portfolio(df,momentum,rankedtickers,10000)
 #print(simulation)
+
+#parameter_calculation(simulation)
+
+plotequitycurve(simulation)

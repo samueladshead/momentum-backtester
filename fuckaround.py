@@ -10,9 +10,7 @@ data = {
 print(data)
 #load data into a DataFrame object:
 df = pd.DataFrame(data, index = ["2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30"])
-df["balls"] = df["calories"].shift(-1)
-df["cock"] = df["balls"] - df["calories"]
-print(df)
+print(df.iloc[-1, -1])
 #idk = df.loc[f"2026-06-27"] + df.loc[f"2026-06-28"]
 #print(idk)
 
@@ -36,3 +34,4 @@ def idk(input):
   um = df.loc["2026-06-30"].sort_values(ascending=True)
   matcha = um.nlargest(3).index
   print(matcha)
+
