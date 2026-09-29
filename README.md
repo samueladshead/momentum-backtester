@@ -11,7 +11,7 @@
 In this project, I used Python to use historical data from Yahoo Finance to simulate a stock portfolio over a user-defined period.
 
 ## Overview
-This project is a momemntum backtester built from scratch, which analyses
+This project is a momentum backtester built from scratch, which analyses
 data outputted from Yahoo Finance, ranks the top n stocks over a period of time
 and simulates a real portfolio over a given period. The code is the able to
 compare the perfomance of the model against the SPY reference stock.
