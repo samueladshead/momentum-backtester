@@ -11,19 +11,19 @@
 In this project, I used Python to use historical data from Yahoo Finance to simulate a stock portfolio over a user-defined period.
 
 ## Overview
-This project is a momentum backtester built from scratch, which analyses
+This project is a momentum backtester, which analyses
 data outputted from Yahoo Finance, ranks the top n stocks over a period of time
 and simulates a real portfolio over a given period. The code is the able to
-compare the perfomance of the model against the SPY reference stock.
+compare the perfomance of the model against the SPY reference.
 
 ## Prerequisites
 - Python (3.14 or higher)
 - Required packages: `numpy`, `pandas`, `yfinance`, `matplotlib`, `dateutil`
 
 ## Main features
-- Show **historic data** for user-defined stocks
+- Show **historic data** for user-defined stocks and period
 - **Simulate** the portfolio using the top 3 stocks with the highest momentum for each month with a user-defined portfolio starting value
-- Calculate various parameters of the simulation, including **Annual Return**, **Monthly Returns**, **Sharpe Ratio** and the **Maximum Drawdown**
+- Calculate various parameters of the simulation, including: **Annual Return**, **Monthly Returns**, **Sharpe Ratio** and the **Maximum Drawdown**
 
 ## Installation
 1. Clone this repository:
